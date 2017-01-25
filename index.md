@@ -48,15 +48,17 @@ $$
 Where 
 $C_{\mu i}$ are the Molecular orbital coefficients and $\mathbf{S}_{\mu \nu}$ The atomic orbitals overlaps.
 
-$$
-  \mathbf{S}_{\mu \nu}(\mathbf{R}(t), \mathbf{R}(t - \Delta t)) = 
-  \langle \chi_{\mu}(\mathbf{R}(t)) \mid \chi_{\nu}(\mathbf{R}(t - \Delta t)\rangle
- \quad \mathbf(7)
-$$
+$$ \mathbf{S}_{\mu \nu}(\mathbf{R}(t), \mathbf{R}(t - \Delta t)) =  \langle \chi_{\mu}(\mathbf{R}(t)) \mid \chi_{\nu}(\mathbf{R}(t - \Delta t)\rangle \quad \mathbf(7)$$
 
 ### <font color='blue'> Nonadiabatic coupling algorithm implementation</font>
-<justify>The  figure belows shows schematically the workflow for calculating the Nonadiabatic 
-coupling matrices from a molecular dynamic trajectory. The uppermost node represent a molecular dynamics trajectory that is subsequently divided in its components and  for each geometry the molecular orbitals are computed. These molecular orbitals are stored in a [HDF5](http://www.h5py.org/) binary file and subsequently calculations retrieve sets of three molecular orbitals that are use to calculate the nonadiabatic coupling matrix using equations **4** to **7**. These coupling matrices are them feed to the *[PYXAID](https://www.acsu.buffalo.edu/~alexeyak/pyxaid/overview.html)* package to carry out nonadiabatic molecular dynamics.</justify>
+The  figure belows shows schematically the workflow for calculating the Nonadiabatic 
+coupling matrices from a molecular dynamic trajectory. The uppermost node represent a molecular dynamics
+trajectory that is subsequently divided in its components andfor each geometry the molecular
+orbitals are computed. These molecular orbitals are stored in a [HDF5](http://www.h5py.org/)
+binary file and subsequently calculations retrieve sets of three molecular orbitals that are
+use to calculate the nonadiabatic coupling matrix using equations **4** to **7**. These coupling
+matrices are them feed to the [PYXAID](https://www.acsu.buffalo.edu/~alexeyak/pyxaid/overview.html)
+package to carry out nonadiabatic molecular dynamics.
 
  ![title](files/nac_worflow.png)
  Workflow for the calculation of the Nonadiabatic coupling using CP2K
