@@ -1,3 +1,4 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 ##  <font color='blue'> Installation</font>
 
@@ -13,33 +14,32 @@ Then,  to install the `` nonadiabaticCoupling`` library type the following comma
 Note: **QMWorks** is installed using [conda](http://conda.pydata.org/docs/index.html), we suggest you to use the same virtual environment to run the coupling calculations.
 
 ## <font color='blue'> Nonadiabatic coupling matrix</font>
-The total time-dependent wave function $\Psi(\mathbf{R}, t)$ can be expressed in terms of a linear combination
-of N adiabatic electronic eigenstates $\phi_{i}(\mathbf{R}(t))$, $$\Psi(\mathbf{R}, t) =  \sum^{N}_{i=1} c_i(t)\phi_{i}(\mathbf{R}(t)) \quad \mathbf(1)$$ 
+The total time-dependent wave function $$\Psi(\mathbf{R}, t)$$ can be expressed in terms of a linear combination
+of N adiabatic electronic eigenstates $$\phi_{i}(\mathbf{R}(t))$$,
+
+$$\Psi(\mathbf{R}, t) =  \sum^{N}_{i=1} c_i(t)\phi_{i}(\mathbf{R}(t)) \quad \mathbf(1)$$ 
+
 The time-dependent coefficients are propagated according to
 
 $$\frac{dc_j(t)}{dt} = -i\hbar^2 c_j(t) E_j(t) - \sum^{N}_{i=1}c_i(t)\sigma_{ji}(t)  \quad \mathbf(2)$$
 
-where $E_j(t)$ is the energy of the jth adiabatic state and $\sigma_{ji}(t)$ the nonadiabatic matrix, which elements are given by the expression
+where $$E_j(t)$$ is the energy of the jth adiabatic state and $\sigma_{ji}(t)$ the nonadiabatic matrix, which elements are given by the expression
 
-$$
-\sigma_{ji}(t) = \langle \phi_{j}(\mathbf{R}(t)) \mid \frac{\partial}{\partial t} \mid \phi_{i}(\mathbf{R}(t)) \rangle
- \quad \mathbf(3)
-$$
+$$\sigma_{ji}(t) = \langle \phi_{j}(\mathbf{R}(t)) \mid \frac{\partial}{\partial t} \mid \phi_{i}(\mathbf{R}(t)) \rangle
+ \quad \mathbf(3)$$
 
 that can be approximate using three consecutive molecular geometries
 
-$$
-\sigma_{ji}(t) \approx \frac{1}{4 \Delta t} (3\mathbf{S}_{ji}(t) - 3\mathbf{S}_{ij}(t) - \mathbf{S}_{ji}(t-\Delta t) + \mathbf{S}_{ij}(t-\Delta t))
- \quad \mathbf(4)
-$$
+$$\sigma_{ji}(t) \approx \frac{1}{4 \Delta t} (3\mathbf{S}_{ji}(t) - 3\mathbf{S}_{ij}(t) - \mathbf{S}_{ji}(t-\Delta t) + \mathbf{S}_{ij}(t-\Delta t))
+ \quad \mathbf(4)$$
 
 where $\mathbf{S}_{ji}(t)$ is the overlap matrix between two consecutive time steps
-$$
-\mathbf{S}_{ij}(t) = \langle \phi_{j}(\mathbf{R}(t-\Delta t)) \mid \phi_{i}(\mathbf{R}(t)) \rangle
- \quad \mathbf(5)
-$$
+
+$$\mathbf{S}_{ij}(t) = \langle \phi_{j}(\mathbf{R}(t-\Delta t)) \mid \phi_{i}(\mathbf{R}(t)) \rangle
+ \quad \mathbf(5)$$
 
 and the overlap matrix is calculated in terms of atomic orbitals
+
 $$
 \mathbf{S}_{ji}(t) = \sum_{\mu} C^{*}_{\mu i}(t) \sum_{\nu} C_{\nu j}(t - \Delta t) \mathbf{S}_{\mu \nu}(t)
  \quad \mathbf(6)
