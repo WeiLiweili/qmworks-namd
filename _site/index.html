@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> – </title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="">
+    <meta property="og:description" content="" />
+    
+    <meta name="author" content="" />
+
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title=" - " href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/"></a></h1>
+            <p class="site-description"></p>
+          </div>
+
+          <nav>
+            <a href="/">Blog</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="page">
+
+  <h1></h1>
+
+  <div class="entry">
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<h2 id="font-colorblue-installationfont"><font color="blue"> Installation</font></h2>
+
+<p>In order to install the <em>nonadiabaticCoupling</em> library you need to install first
+the <strong>QMWorks</strong> package and its environment using <em>Anaconda</em> as detailed
+<a href="https://github.com/SCM-NV/qmworks">here</a>.</p>
+
+<p>Then,  to install the <code class="highlighter-rouge">nonadiabaticCoupling</code> library type the following
+command inside the conda environment:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="o">(</span>qmworks<span class="o">)</span> user@server&gt; pip install https://github.com/felipeZ/nonAdiabaticCoupling/tarball/master#egg<span class="o">=</span>qmworks --upgrade
+</code></pre>
+</div>
+
+<p>Note: <strong>QMWorks</strong> is installed using <a href="http://conda.pydata.org/docs/index.html">conda</a>,
+we suggest you to use the same virtual environment to run the coupling calculations.</p>
+
+<h2 id="font-colorblue-nonadiabatic-coupling-matrixfont"><font color="blue"> Nonadiabatic coupling matrix</font></h2>
+<p>The current implementation of the nonadiabatic coupling is based on:
+Plasser, F.; Granucci, G.; Pittner, j.; Barbatti, M.; Persico, M.; Lischka.
+<em>Surface hopping dynamics using a locally diabatic formalism: Charge transfer
+in the ethylene dimer cation and excited state dynamics in the 2-pyridone dimer</em>.
+<strong>J. Chem. Phys. 2012, 137, 22A514.</strong></p>
+
+<p>The total time-dependent wave function <script type="math/tex">\Psi(\mathbf{R}, t)</script> can be expressed in
+terms of a linear combination of <code class="highlighter-rouge">N</code> adiabatic electronic eigenstates
+<script type="math/tex">\phi_{i}(\mathbf{R}(t))</script>,</p>
+
+<script type="math/tex; mode=display">\Psi(\mathbf{R}, t) =  \sum^{N}_{i=1} c_i(t)\phi_{i}(\mathbf{R}(t)) \quad \mathbf(1)</script>
+
+<p>The time-dependent coefficients are propagated according to</p>
+
+<script type="math/tex; mode=display">\frac{dc_j(t)}{dt} = -i\hbar^2 c_j(t) E_j(t) - \sum^{N}_{i=1}c_i(t)\sigma_{ji}(t)  \quad \mathbf(2)</script>
+
+<p>where <script type="math/tex">E_j(t)</script> is the energy of the jth adiabatic state and $\sigma_{ji}(t)$
+the nonadiabatic matrix, which elements are given by the expression</p>
+
+<script type="math/tex; mode=display">\sigma_{ji}(t) = \langle \phi_{j}(\mathbf{R}(t)) \mid \frac{\partial}{\partial t} \mid \phi_{i}(\mathbf{R}(t)) \rangle
+ \quad \mathbf(3)</script>
+
+<p>that can be approximate using three consecutive molecular geometries</p>
+
+<script type="math/tex; mode=display">\sigma_{ji}(t) \approx \frac{1}{4 \Delta t} (3\mathbf{S}_{ji}(t) - 3\mathbf{S}_{ij}(t) - \mathbf{S}_{ji}(t-\Delta t) + \mathbf{S}_{ij}(t-\Delta t))
+ \quad \mathbf(4)</script>
+
+<p>where $\mathbf{S}_{ji}(t)$ is the overlap matrix between two consecutive time steps</p>
+
+<script type="math/tex; mode=display">\mathbf{S}_{ij}(t) = \langle \phi_{j}(\mathbf{R}(t-\Delta t)) \mid \phi_{i}(\mathbf{R}(t)) \rangle
+ \quad \mathbf(5)</script>
+
+<p>and the overlap matrix is calculated in terms of atomic orbitals</p>
+
+<script type="math/tex; mode=display">\mathbf{S}_{ji}(t) = \sum_{\mu} C^{*}_{\mu i}(t) \sum_{\nu} C_{\nu j}(t - \Delta t) \mathbf{S}_{\mu \nu}(t)
+ \quad \mathbf(6)</script>
+
+<p>Where 
+$C_{\mu i}$ are the Molecular orbital coefficients and $\mathbf{S}_{\mu \nu}$ The atomic orbitals overlaps.</p>
+
+<script type="math/tex; mode=display">\mathbf{S}_{\mu \nu}(\mathbf{R}(t), \mathbf{R}(t - \Delta t)) =  \langle \chi_{\mu}(\mathbf{R}(t)) \mid \chi_{\nu}(\mathbf{R}(t - \Delta t)\rangle \quad \mathbf(7)</script>
+
+<h3 id="font-colorblue-nonadiabatic-coupling-algorithm-implementationfont"><font color="blue"> Nonadiabatic coupling algorithm implementation</font></h3>
+<p>The  figure belows shows schematically the workflow for calculating the Nonadiabatic 
+coupling matrices from a molecular dynamic trajectory. The uppermost node represent
+a molecular dynamics
+trajectory that is subsequently divided in its components andfor each geometry the molecular
+orbitals are computed. These molecular orbitals are stored in a <a href="http://www.h5py.org/">HDF5</a>
+binary file and subsequently calculations retrieve sets of three molecular orbitals that are
+use to calculate the nonadiabatic coupling matrix using equations <strong>4</strong> to <strong>7</strong>.
+These coupling matrices are them feed to the <a href="https://www.acsu.buffalo.edu/~alexeyak/pyxaid/overview.html">PYXAID</a>
+package to carry out nonadiabatic molecular dynamics.</p>
+
+<p><img src="files/nac_worflow.png" alt="title" />
+ Workflow for the calculation of the Nonadiabatic coupling using CP2K</p>
+
+<p>The Overlap between primitives are calculated using the Obara-Saika recursive scheme,
+that has been implemented as a <a href="http://cython.org">cython</a> module for efficiency reasons. The nonadiabatic coupling module uses the aforementioned
+module together with the <a href="https://docs.python.org/3.6/library/multiprocessing.html">multiprocess</a> Python library to distribute the overlap matrix computations among the CPUs available. Also, all the heavy numerical processing is carried out by the highly optimized functions in <a href="http://www.numpy.org">numpy</a>.</p>
+
+<p>The <strong>nonadiabaticCoupling</strong> package relies on <em>QMWorks</em> to run the Quantum mechanical simulations using the <a href="https://www.cp2k.org/">CP2K</a> package.  Also, the <a href="library">noodles</a> is used  to schedule expensive numerical computations that are required to calculate the nonadiabatic coupling matrix.</p>
+
+<h1 id="font-colorblue-running-the-workflowfont"><font color="blue"> Running the workflow</font></h1>
+
+<p>There are 2 steps to compute the nondiabatic couplings for a given molecular dynamics: 
+    1. Create the scripts to perform the simulation
+    2. Running the scripts</p>
+
+<p>Below is  shown the script responsible for the first step of the simulation, which is available at: 
+<code class="highlighter-rouge">bash
+https://github.com/felipeZ/nonAdiabaticCoupling/blob/master/scripts/distribution/distribute_jobs.py
+</code></p>
+
+<p>This script takes as input a minimal slurm configuration that can be modified by the user. The slurm configuration
+contains the number of nodes and task, together with the walltime requested and the job name. In the table below the default Slurm values for these parameters is shown</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">property</th>
+      <th style="text-align: center">default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">nodes</td>
+      <td style="text-align: center">2</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">tasks</td>
+      <td style="text-align: center">24</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">time</td>
+      <td style="text-align: center">48:00:00</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">name</td>
+      <td style="text-align: center">namd</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Also, the user should provided the following parameters for the simulation</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>* path where the CP2K calculation will be created (``scratch``)
+* project_name
+* path to the basis and Cp2k Potential
+* CP2K parameters:
+  - Range of Molecular oribtals printed by CP2K
+  - Cell parameter
+* Settings to Run Cp2k simulations
+* Path to the trajectory in XYZ format
+</code></pre>
+</div>
+
+<p>This is the script corresponding to the step 1:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="n">SLURM</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">"SLURM"</span><span class="p">,</span> <span class="p">(</span><span class="s">"nodes"</span><span class="p">,</span> <span class="s">"tasks"</span><span class="p">,</span> <span class="s">"time"</span><span class="p">,</span> <span class="s">"name"</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="s">"""
+    THE USER MUST CHANGES THESE VARIABLES ACCORDING TO HER/HIS NEEDS:
+      * project_name
+      * path to the basis and Cp2k Potential
+      * CP2K:
+          - Range of Molecular oribtals printed by CP2K
+          - Cell parameter
+      * Settings to Run Cp2k simulations
+      * Path to the trajectory in XYZ
+
+    The slurm configuration is optional but the user can edit it:
+        property  default
+       * nodes         2
+       * tasks        24
+       * time   48:00:00
+       * name       namd
+
+    """</span>
+    <span class="c"># USER DEFINED CONFIGURATION</span>
+
+    <span class="c"># Varaible to define the Path ehere the Cp2K jobs will be computed</span>
+    <span class="n">scratch</span> <span class="o">=</span> <span class="s">"&lt;Path/where/the/Molecular Orbitals/and/Couplings/are/computed&gt;"</span>
+    <span class="n">project_name</span> <span class="o">=</span> <span class="s">'replace_with_Name_of_the_Project'</span>  <span class="c"># name use to create folders</span>
+
+    <span class="c"># Path to the basis set used by Cp2k</span>
+    <span class="n">basisCP2K</span> <span class="o">=</span> <span class="s">"&lt;Path/to/the/BASIS_MOLOPT&gt;"</span>
+    <span class="n">potCP2K</span> <span class="o">=</span> <span class="s">"&lt;Path/to/the/GTH_POTENTIALS&gt;"</span>
+
+    <span class="c"># Cell parameter can be a:</span>
+    <span class="c"># * number.</span>
+    <span class="c"># * list contaning 3 Number.</span>
+    <span class="c"># * list of list containing the matrix describing the cell.</span>
+    <span class="n">cell_parameters</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="c"># Angles of the cell</span>
+    <span class="n">cell_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">]</span>
+
+    <span class="c"># Range of Molecular orbitals use to print.</span>
+    <span class="c"># They will be used to compute the derivative coupling. If you want</span>
+    <span class="c"># to compute the coupling with 40 Orbitals: 20 occupied and 20 virtual,</span>
+    <span class="c"># you should choose the following index in such a way that you</span>
+    <span class="c"># print 20 HOMOs and 20 LUMOs.</span>
+
+    <span class="n">range_orbitals</span> <span class="o">=</span> <span class="n">Lower_Index</span><span class="p">,</span> <span class="n">Highest_Index</span>
+
+    <span class="c"># The number of LUMOs to print must be equal to the added_mos variable</span>
+    <span class="c"># in CP2K. We are printing 20 by default.</span>
+    <span class="n">cp2k_main</span><span class="p">,</span> <span class="n">cp2k_guess</span> <span class="o">=</span> <span class="n">cp2k_input</span><span class="p">(</span><span class="n">range_orbitals</span><span class="p">,</span> <span class="n">cell_parameters</span><span class="p">,</span>
+                                       <span class="n">cell_angles</span><span class="p">)</span>
+
+    <span class="c"># Trajectory splitting</span>
+    <span class="n">path_to_trajectory</span> <span class="o">=</span> <span class="s">"&lt;Path/to/the/trajectory/in/xyz/format"</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c"># Number of chunks to split the trajectory</span>
+
+    <span class="c"># SLURM Configuration</span>
+    <span class="n">slurm</span> <span class="o">=</span> <span class="n">SLURM</span><span class="p">(</span>
+        <span class="n">nodes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">tasks</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
+        <span class="n">time</span><span class="o">=</span><span class="s">"48:00:00"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s">"namd"</span>
+    <span class="p">)</span>
+    <span class="c"># Path where the data will be copy back</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s">'.'</span><span class="p">)</span>
+
+    <span class="n">distribute_computations</span><span class="p">(</span><span class="n">scratch</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span> <span class="n">basisCP2K</span><span class="p">,</span> <span class="n">potCP2K</span><span class="p">,</span>
+                            <span class="n">cp2k_main</span><span class="p">,</span> <span class="n">cp2k_guess</span><span class="p">,</span> <span class="n">path_to_trajectory</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span>
+                            <span class="n">slurm</span><span class="p">,</span> <span class="n">cwd</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">cp2k_input</span><span class="p">(</span><span class="n">range_orbitals</span><span class="p">,</span> <span class="n">cell_parameters</span><span class="p">,</span> <span class="n">cell_angles</span><span class="p">,</span>
+               <span class="n">added_mos</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="s">"""
+    # create ``Settings`` for the Cp2K Jobs.
+    """</span>
+    <span class="c"># Main Cp2k Jobs</span>
+    <span class="n">cp2k_args</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()</span>
+    <span class="n">cp2k_args</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="s">"DZVP-MOLOPT-SR-GTH"</span>
+    <span class="n">cp2k_args</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="s">"GTH-PBE"</span>
+    <span class="n">cp2k_args</span><span class="o">.</span><span class="n">cell_parameters</span> <span class="o">=</span> <span class="n">cell_parameters</span>
+    <span class="n">main_dft</span> <span class="o">=</span> <span class="n">cp2k_args</span><span class="o">.</span><span class="n">specific</span><span class="o">.</span><span class="n">cp2k</span><span class="o">.</span><span class="n">force_eval</span><span class="o">.</span><span class="n">dft</span>
+    <span class="n">main_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">added_mos</span> <span class="o">=</span> <span class="n">added_mos</span>
+    <span class="n">main_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">max_scf</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">main_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">eps_scf</span> <span class="o">=</span> <span class="mf">1e-4</span>
+    <span class="n">main_dft</span><span class="p">[</span><span class="s">'print'</span><span class="p">][</span><span class="s">'mo'</span><span class="p">][</span><span class="s">'mo_index_range'</span><span class="p">]</span> <span class="o">=</span> <span class="s">"{} {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">range_orbitals</span><span class="p">)</span>
+    <span class="n">cp2k_args</span><span class="o">.</span><span class="n">specific</span><span class="o">.</span><span class="n">cp2k</span><span class="o">.</span><span class="n">force_eval</span><span class="o">.</span><span class="n">subsys</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="s">'None'</span>
+
+    <span class="c"># Setting to calculate the wave function used as guess</span>
+    <span class="n">cp2k_OT</span> <span class="o">=</span> <span class="n">Settings</span><span class="p">()</span>
+    <span class="n">cp2k_OT</span><span class="o">.</span><span class="n">basis</span> <span class="o">=</span> <span class="s">"DZVP-MOLOPT-SR-GTH"</span>
+    <span class="n">cp2k_OT</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="s">"GTH-PBE"</span>
+    <span class="n">cp2k_OT</span><span class="o">.</span><span class="n">cell_parameters</span> <span class="o">=</span> <span class="n">cell_parameters</span>
+    <span class="n">ot_dft</span> <span class="o">=</span> <span class="n">cp2k_OT</span><span class="o">.</span><span class="n">specific</span><span class="o">.</span><span class="n">cp2k</span><span class="o">.</span><span class="n">force_eval</span><span class="o">.</span><span class="n">dft</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">scf_guess</span> <span class="o">=</span> <span class="s">'atomic'</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">ot</span><span class="o">.</span><span class="n">minimizer</span> <span class="o">=</span> <span class="s">'DIIS'</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">ot</span><span class="o">.</span><span class="n">n_diis</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">ot</span><span class="o">.</span><span class="n">preconditioner</span> <span class="o">=</span> <span class="s">'FULL_SINGLE_INVERSE'</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">added_mos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">eps_scf</span> <span class="o">=</span> <span class="mf">1e-04</span>
+    <span class="n">ot_dft</span><span class="o">.</span><span class="n">scf</span><span class="o">.</span><span class="n">scf_guess</span> <span class="o">=</span> <span class="s">'restart'</span>
+    <span class="n">cp2k_OT</span><span class="o">.</span><span class="n">specific</span><span class="o">.</span><span class="n">cp2k</span><span class="o">.</span><span class="n">force_eval</span><span class="o">.</span><span class="n">subsys</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="s">'None'</span>
+
+    <span class="k">return</span> <span class="n">cp2k_args</span><span class="p">,</span> <span class="n">cp2k_OT</span>
+
+<span class="c"># End of the user serviceable code</span>
+</code></pre>
+</div>
+
+<p>Notice that in the previous definition of the <code class="highlighter-rouge">cp2k_input</code> function there are 
+two sets of <code class="highlighter-rouge">Settings</code> called: <code class="highlighter-rouge">cp2k_args</code> and <code class="highlighter-rouge">cp2k_OT</code>. The <code class="highlighter-rouge">cp2k_OT</code> is used
+to create an initial wave function guess using the
+<a href="https://manual.cp2k.org/trunk/CP2K_INPUT/FORCE_EVAL/DFT/SCF/OT.html">orbital transformation</a>
+method. Then once an initial guess is obtained a single point calculation is performed. 
+Subsequent single point calculation to compute the molecular orbitals use the previous
+computations as initial guess, in such a way that the <strong>OT</strong> method is only performed
+in first geometry of the trajectory.</p>
+
+<p>Using the aforemention <code class="highlighter-rouge">Settings</code> <a href="https://github.com/SCM-NV/qmworks">QMWorks</a>
+automatically create the CP2K input. You do not need to add the <em>&amp;</em> or <em>&amp;END</em> symbols,
+<em>QWorks</em> adds them automatically for you.</p>
+
+<p><em>CP2K</em> requires the explicit declaration of the basis set together with the name of the potential used for each one of the atoms. In the previous example the basis for the carbon is <em>DZVP-MOLOPT-SR-GTH</em>, while the potential is <em>GTH-PBE</em>.</p>
+
+<p>There are several way to declare the parameters of the unit cell, you can passed to
+the <code class="highlighter-rouge">cell_parameters</code> variable either a number, a list or a list or list. A single
+number represent a cubic box, while a list represent a <em>parallelepiped</em> and finally a
+list of list contains the <strong>ABC</strong> vectors describing the <a href="https://manual.cp2k.org/trunk/CP2K_INPUT/FORCE_EVAL/QMMM/CELL.html#SYMMETRY">unit cell</a>.
+Alternatively, you can pass the angles of the cell using the <code class="highlighter-rouge">cell_angles</code> variable.</p>
+
+<h4 id="font-colorblue-coupling-calculationfont"><font color="blue"> Coupling calculation</font></h4>
+<p>In order to compute the derivative coupling, the molecular orbitals coefficients for
+the relevant orbitals should be available. These molecular orbitals are computed
+using the previous script. The workflow assumes that you are printing 2<em>N number
+of orbitals from *CP2K</em>: N HOMOs and N LUMOs. this is done using the <code class="highlighter-rouge">added_mos</code>
+parameters in <em>CP2K</em> that determines the number of LUMOs to compute and using
+the <code class="highlighter-rouge">mo_index_range</code> keyword in <strong>Cp2k</strong>, which print molecular orbital in
+the range provided by the user.</p>
+
+<h3 id="font-colorblue-workflow-distributionfont"><font color="blue"> Workflow distribution</font></h3>
+<p>Once you fill in the required parameters you just need to run the script like:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">user@server&gt; </span>python distribute_jobs.py
+</code></pre>
+</div>
+
+<p>You will see that several folders were create: <code class="highlighter-rouge">chunk_a</code>, <code class="highlighter-rouge">chunk_b</code>, etc., where the number of files correspond with the number of block that you request in the script. The content of each folder is something similar to:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">[user@server]$ </span>ls chunk_a
+chunk_xyz_a  launch.sh  script_remote_function.py
+</code></pre>
+</div>
+
+<p>Each folder containts a <code class="highlighter-rouge">chunk_x</code> file containing molecular geometries in <code class="highlighter-rouge">xyz</code> format, a <code class="highlighter-rouge">slurm</code> <code class="highlighter-rouge">launch.sh</code> script file and a python script <code class="highlighter-rouge">script_remote_function.py</code> to compute the couplings.</p>
+
+<p><strong>You only need to run the slurm script in order to compute the jobs.</strong></p>
+
+<h3 id="font-colorblue-merging-the-chunksfont"><font color="blue"> Merging the chunks</font></h3>
+
+<p>The previous script generates a set of folder where the molecular dynamic trajectory 
+has been split in several chunks containing approximately the same number of geometries.
+In each of this folders a <a href="http://www.h5py.org/">HDF5</a> file is creating containing
+the Molecular orbital and the coupling.</p>
+
+<p>Once all the batches have finishes all the <code class="highlighter-rouge">HDF5</code> files should be merged into one 
+and the whole couplings for the entire trajectory can be printed. For doing so,
+a script is provide and can be found at:</p>
+
+<p>The structure of the script is shown in the following figure:</p>
+
+<h2 id="font-colorblue-restarting-a-job-font"><font color="blue"> Restarting a Job </font></h2>
+
+<p>Both the <em>molecular orbitals</em> and the <em>derivative couplings</em> for a given molecular dynamic trajectory are stored in a <a href="http://www.h5py.org/">HDF5</a> file. The library check wether the <em>MO</em> orbitals or the coupling under consideration are already present in the <code class="highlighter-rouge">HDF5</code> file, otherwise compute it. Therefore  if the workflow computation fails due to a recoverable issue like:</p>
+
+<ul>
+  <li>Cancelation due to time limit.</li>
+  <li>Manual suspension or cancelation for another reasons.</li>
+</ul>
+
+<p>Then, in order to restart the job you need to perform the following actions:</p>
+
+<ul>
+  <li>Remove the plams folder  where the <code class="highlighter-rouge">CP2K</code> computation were carried out.</li>
+  <li><strong>Do Not remove</strong> the file called <code class="highlighter-rouge">cache.json</code> from the current work  directory.</li>
+</ul>
+
+<p>The <code class="highlighter-rouge">plams</code> folder is create inside the <code class="highlighter-rouge">scratch</code> folder that you have defined in the script to distribute the computation. In the previous example it was:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code> <span class="n">scratch</span> <span class="o">=</span> <span class="s">'scratch-shared/user29/jobs_quantumdot'</span>
+</code></pre>
+</div>
+
+<h2 id="font-colorblue-known-issues-font"><font color="blue"> Known Issues </font></h2>
+
+<h4 id="font-colorblue-coupling-distribution-in-multiple-nodes-font"><font color="blue"> Coupling distribution in multiple nodes </font></h4>
+<p><code class="highlighter-rouge">CP2K</code> can uses multiple nodes to perform the computation of the molecular orbitals using the <a href="http://www.mcs.anl.gov/research/projects/mpi/">MPI</a> protocol. Unfortunately, we have not implemented <code class="highlighter-rouge">MPI</code> for the computation of the <em>derivative coupling matrix</em>. The practical consequences of the aforemention issues, is that <strong>the 
+calculation of the coupling matrices are carried out in only 1 computational node</strong>. It means that if you want ask
+for more than 1 node to compute the molecular orbitals with <code class="highlighter-rouge">CP2K</code>, once the workflow starts to compute the <em>derivative couplings</em> only 1 node will be used at a time and the rest will remain idle wating computational resources.</p>
+
+<h4 id="font-colorblue-memory-allocation-font"><font color="blue"> Memory allocation </font></h4>
+<p>The <em>derivative couplings</em> computations are started once all the molecular orbitals have been calculated. Then, all the coupling calculation are scheduled, holding in memory all the molecular orbitals until they are requested.  It cause a huge memory consumption.</p>
+
+<h4 id="font-colorblue-reporting-a-bug-or-requesting-a-feature-font"><font color="blue"> Reporting a bug or requesting a feature </font></h4>
+<p><strong>To report  an issue or request a new feature you can use the issues tracker of  <a href="https://github.com/felipeZ/nonAdiabaticCoupling/issues">github</a></strong></p>
+
+<h2 id="font-colorblue-the-coupling-workflowfont"><font color="blue"> The Coupling Workflow</font></h2>
+<p>The following function is called by the <code class="highlighter-rouge">script_remote_function.py</code> to compute the molecular orbitals and the correspoding derivative couplings.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_pyxaid_hamiltonians</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span>
+                                 <span class="n">cp2k_args</span><span class="p">,</span> <span class="n">guess_args</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">geometries</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dictCGFs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">calc_new_wf_guess_on_points</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">path_hdf5</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">enumerate_from</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                 <span class="n">package_config</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nCouplings</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">traj_folders</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">basisname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">hdf5_trans_mtx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c"># prepare Cp2k Jobs</span>
+    <span class="c"># Point calculations Using CP2K</span>
+    <span class="n">mo_paths_hdf5</span> <span class="o">=</span> <span class="n">calculate_mos</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">geometries</span><span class="p">,</span> <span class="n">project_name</span><span class="p">,</span>
+                                  <span class="n">path_hdf5</span><span class="p">,</span> <span class="n">traj_folders</span><span class="p">,</span> <span class="n">cp2k_args</span><span class="p">,</span>
+                                  <span class="n">guess_args</span><span class="p">,</span> <span class="n">calc_new_wf_guess_on_points</span><span class="p">,</span>
+                                  <span class="n">enumerate_from</span><span class="p">,</span>
+                                  <span class="n">package_config</span><span class="o">=</span><span class="n">package_config</span><span class="p">)</span>
+
+    <span class="c"># Calculate Non-Adiabatic Coupling</span>
+    <span class="c"># Number of Coupling points calculated with the MD trajectory</span>
+    <span class="n">nPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">geometries</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
+    <span class="n">promise_couplings</span> <span class="o">=</span> <span class="p">[</span><span class="n">calculate_coupling</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">path_hdf5</span><span class="p">,</span> <span class="n">dictCGFs</span><span class="p">,</span>
+                                            <span class="n">geometries</span><span class="p">,</span>
+                                            <span class="n">mo_paths_hdf5</span><span class="p">,</span> <span class="n">hdf5_trans_mtx</span><span class="p">,</span>
+                                            <span class="n">enumerate_from</span><span class="p">,</span>
+                                            <span class="n">output_folder</span><span class="o">=</span><span class="n">project_name</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
+                                            <span class="n">nCouplings</span><span class="o">=</span><span class="n">nCouplings</span><span class="p">,</span>
+                                            <span class="n">units</span><span class="o">=</span><span class="s">'angstrom'</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)]</span>
+    <span class="n">path_couplings</span> <span class="o">=</span> <span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">promise_couplings</span><span class="p">)</span>
+
+    <span class="c"># Write the results in PYXAID format</span>
+    <span class="n">path_hamiltonians</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s">'hamiltonians'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_hamiltonians</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path_hamiltonians</span><span class="p">)</span>
+
+    <span class="c"># Inplace scheduling of write_hamiltonians function.</span>
+    <span class="c"># Equivalent to add @schedule on top of the function</span>
+    <span class="n">schedule_write_ham</span> <span class="o">=</span> <span class="n">schedule</span><span class="p">(</span><span class="n">write_hamiltonians</span><span class="p">)</span>
+
+    <span class="n">promise_files</span> <span class="o">=</span> <span class="n">schedule_write_ham</span><span class="p">(</span><span class="n">path_hdf5</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">,</span> <span class="n">mo_paths_hdf5</span><span class="p">,</span>
+                                       <span class="n">path_couplings</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span>
+                                       <span class="n">path_dir_results</span><span class="o">=</span><span class="n">path_hamiltonians</span><span class="p">,</span>
+                                       <span class="n">enumerate_from</span><span class="o">=</span><span class="n">enumerate_from</span><span class="p">,</span>
+                                       <span class="n">nCouplings</span><span class="o">=</span><span class="n">nCouplings</span><span class="p">)</span>
+
+    <span class="n">hams_files</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">promise_files</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">hams_files</span><span class="p">)</span>
+
+</code></pre>
+</div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
